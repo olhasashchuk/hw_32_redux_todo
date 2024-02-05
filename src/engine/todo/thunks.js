@@ -1,31 +1,28 @@
+import {v4 as uuidv4 } from 'uuid';
 import slice from "./slice.js";
 
-const getData = (arg) => {
-    console.log(arg)
-    return (dispatch)=> {
-        const data = JSON.parse(localStorage.getItem('items'))
-        dispatch(slice.actions.setItems(data))
-        dispatch(slice.actions.setLoading(false))
-    }
+const getData = () =>  (dispatch) => {
+    const data = JSON.parse(localStorage.getItem('items'))
+    dispatch(slice.actions.setItems(data))
+    dispatch(slice.actions.setLoading(false))
 }
 
-const setData = (event, items) => {
-    return(dispatch)=> {
-        event.preventDefault();
-        dispatch(slice.actions.setLoading(false))
-        dispatch(slice.actions.addItem(event.target.text_input.value))
-        dispatch(slice.actions.setLoading(false))
-        localStorage.setItem('items', JSON.stringify([...items, event.target.text_input.value]))
-    }
+const setData = (event, items) => (dispatch) => {
+    dispatch(slice.actions.setLoading(true))
+    event.preventDefault();
+    const newItem = {
+        id: `item_${uuidv4()}`,
+        text: event.target.text_input.value,
+    };
+    dispatch(slice.actions.addItem(newItem));
+    localStorage.setItem('items', JSON.stringify([...items, newItem]));
+    dispatch(slice.actions.setLoading(false))
 }
 
-const deleteData = (itemToDelete) => {
-    return (dispatch) => {
-        dispatch(slice.actions.deleteItem(itemToDelete));
-        const data = JSON.parse(localStorage.getItem('items'));
-        const newData = data.filter((item) => item !== itemToDelete);
-        localStorage.setItem('items', JSON.stringify(newData));
-    }
+const deleteData = (id) => (dispatch, getState)=> {
+    dispatch(slice.actions.deleteItem(id));
+    const newData = getState().todo.items;
+    localStorage.setItem('items', JSON.stringify(newData));
 }
 
 const clearAllItems = () => {

@@ -21,7 +21,7 @@ export function List() {
                 ? <span>No data</span>
                 : (
                     <ul className="list">
-                        {items.map((item, index)=><ListItem key={index}>{item}</ListItem>)}
+                        {items.map(item => <ListItem key={item.id} id={item.id} text={item.text}/>)}
                     </ul>
                 )
             }

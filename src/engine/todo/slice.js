@@ -14,7 +14,7 @@ const todoSlice = createSlice ({
             state.items.push(action.payload);
         },
         deleteItem: (state, action) => {
-            state.items = state.items.filter(item => item !== action.payload);
+            state.items = state.items.filter(item => item.id !== action.payload);
         },
         setLoading: (state, action) => {
             state.loading = action.payload;
